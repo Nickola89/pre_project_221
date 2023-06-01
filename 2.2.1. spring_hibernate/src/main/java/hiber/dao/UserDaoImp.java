@@ -21,10 +21,6 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
-    public void add(User user, Car car) {
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public List<User> listUsers() {
         TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery("from User");
@@ -32,12 +28,9 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
-    public User findUser(String model, int series) {
-        String hql = "from User where car.model = :model and car.series = :series";
-        TypedQuery<User> query = sessionFactory.getCurrentSession().
-                createQuery(hql);
-        query.setParameter("model", model);
-        query.setParameter("series", series);
-        return query.getResultList().get(0);
+    public User findUserByCar(Car car) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from User user where user.car.model = :model and user.car.series = :series", User.class)
+                .setParameter("model", car.getModel()).setParameter("series", car.getSeries()).uniqueResult();
     }
 }
